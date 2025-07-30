@@ -39,4 +39,4 @@ export default function Login() {
             <LoginForm onSuccess={handleLoginSuccess} />
         </div>
     );
-}
+};
