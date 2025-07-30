@@ -5,6 +5,8 @@ import { useAuth } from './context/Auth'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import ForgotPassword from './pages/auth/ForgotPassword'
+import ResetPassword from './pages/auth/ResetPassword'
+import EmailVerification from './pages/auth/EmailVerification'
 import GoogleCallback from './pages/auth/GoogleCallback'
 // Main Pages
 import Home from './pages/Home'
@@ -24,11 +26,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/home"element={<Home />}/>
       <Route path="/" element={<Navigate to="/home" replace />} />
-
+      <Route path="/home" element={<Home />}/>
       <Route path="/auth/google/callback" element={<GoogleCallback />} />
-
       <Route 
         path="/login" 
         element={
@@ -59,9 +59,42 @@ function App() {
       />
       <Route 
         path="/forgot-password" 
-        element={<ForgotPassword />} 
+        element={
+          isAuthenticated ? (
+            user?.role === 'admin' ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <ForgotPassword />
+          )
+        } 
+      />
+      <Route 
+        path="/reset-password" 
+        element={
+          isAuthenticated ? (
+            user?.role === 'admin' ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <ResetPassword />
+          )
+        } 
       />
 
+      {/* Authenticated Only Routes */}
+      <Route
+        path="/email/verification"
+        element={
+          <ProtectedRoute>
+            <EmailVerification />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/blog/:id"
         element={
@@ -70,7 +103,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/dashboard"
         element={
@@ -79,7 +111,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
       <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   )

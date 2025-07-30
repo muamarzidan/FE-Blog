@@ -115,8 +115,10 @@ export const authAPI = {
     },
     logout: () => apiInstance.post("/logout"),
     getUser: () => apiInstance.get("/user"),
+    resendVerification: () => apiInstance.post("/email/verification-notification"),
     forgotPassword: (email) => apiInstance.post("/forgot-password", { email }),
     resetPassword: (data) => apiInstance.post("/reset-password", data),
+    verifyEmail: (token, id, hash) => apiInstance.get(`/email/verify/${id}/${hash}?token=${token}`)
 };
 
 export const blogAPI = {
