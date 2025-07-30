@@ -1,3 +1,35 @@
+@import "tailwindcss";
+
+@layer components {
+  .button-primary {
+    @apply w-full rounded-full py-3 bg-black text-white font-semibold transition-colors duration-200 hover:bg-gray-800;
+  }
+
+  .button-secondary {
+    @apply w-full rounded-full py-2.5 text-black bg-white border-2 border-black font-semibold transition-colors duration-200 hover:bg-gray-300;
+  }
+
+  .button-danger {
+    @apply w-full rounded-full py-3 text-red-700 bg-red-100 font-semibold transition-colors duration-200 hover:bg-red-200;
+  }
+
+  .button-google {
+    @apply w-full rounded-full py-3 bg-white text-black font-semibold flex items-center justify-center gap-2 transition-colors duration-200 hover:bg-gray-100 border-1 border-gray-300;
+  }
+
+  .text-link {
+    @apply text-blue-800 hover:text-blue-600 transition-colors duration-200 font-medium;
+  }
+
+  .text-error {
+    @apply text-red-600;
+  }
+
+  .input-field {
+    @apply w-full px-5 text-black py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2;
+  }
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -11,58 +43,4 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
