@@ -22,12 +22,11 @@ jobs:
         run: npm run build
 
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@main
+        uses: BetaHuhn/deploy-to-vercel-action@v2
         with:
+          github-token: ${{ github.token }}
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          scope: ${{ secrets.VERCEL_ORG_ID }}
           working-directory: ./
-          vercel-args: |
-            ${{ github.ref == 'refs/heads/main' && '--prod' || '--target=preview' }}
+          production: ${{ github.ref == 'refs/heads/main' }}

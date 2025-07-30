@@ -41,7 +41,7 @@
 
 //     callbackLoginByGoogle: async () => {
 //         try {
-//             const response = await apiAppSettingsInstance.get("/auth/google/callback");
+//             const response = await apiAppSettingsInstance.get("/");
 //             return response.data;
 //         } catch (error) {
 //             throw error;
