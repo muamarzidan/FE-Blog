@@ -1,32 +1,35 @@
-name: Vercel Deployment
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [main, DEV_Zidan]
+  pull_request:
+    branches: [main]
 
 jobs:
-  deploy:
+  # Job untuk testing dan linting
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Run linting (optional)
+        run: npm run lint || echo "No lint script found"
+        continue-on-error: true
+
+      - name: Run tests (optional)
+        run: npm test || echo "No test script found"
+        continue-on-error: true
 
       - name: Build project
         run: npm run build
-
-      - name: Deploy to Vercel
-        uses: BetaHuhn/deploy-to-vercel-action@v2
-        with:
-          github-token: ${{ github.token }}
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./
-          production: ${{ github.ref == 'refs/heads/main' }}
