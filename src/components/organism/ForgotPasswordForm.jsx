@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { authAPI } from '../../utils/request';
+import { useAuth } from '../../context/Auth';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
 
 
@@ -159,11 +159,10 @@ const ForgotPasswordForm = () => {
                 </div>
 
                 <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h3 className="font-medium text-blue-800 mb-2">ℹ️ Informasi:</h3>
+                    <h3 className="font-medium text-blue-800 mb-2">Informasi:</h3>
                     <div className="text-sm text-blue-700 space-y-1">
                         <p>• Link reset password berlaku selama 60 menit</p>
                         <p>• Periksa folder spam jika tidak menerima email</p>
-                        <p>• Untuk keamanan, respons akan sama meskipun email tidak terdaftar</p>
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@
   }
 
   .button-secondary {
-    @apply w-full rounded-full py-3 text-sm text-black bg-white border-2 border-black font-semibold transition-colors duration-200 hover:bg-gray-300;
+    @apply w-full rounded-full py-2.5 text-sm text-black bg-white border-2 border-black font-semibold transition-colors duration-200 hover:bg-gray-300;
   }
 
   .button-danger {
