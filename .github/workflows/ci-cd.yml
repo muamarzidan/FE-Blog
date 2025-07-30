@@ -24,6 +24,11 @@ jobs:
 
       - name: Run linting (optional)
         run: npm run lint || echo "No lint script found"
+        continue-on-error: true
+
+      - name: Run tests (optional)
+        run: npm test || echo "No test script found"
+        continue-on-error: true
 
       - name: Build project
         run: npm run build
@@ -49,14 +54,14 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          VITE_BE_API_URL: ${{ secrets.VITE_BE_API_URL }}
 
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
+        uses: vercel/action-deploy@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: ./
-          scope: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
