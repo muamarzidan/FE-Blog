@@ -33,7 +33,7 @@ const Home = () => {
                                         </p>
                                         <button
                                             onClick={handleLogout}
-                                            className="button-danger px-2 cursor-pointer"
+                                            className="button-danger px-1 cursor-pointer"
                                         >
                                             Logout
                                         </button>
