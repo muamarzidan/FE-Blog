@@ -2,19 +2,19 @@
 
 @layer components {
   .button-primary {
-    @apply w-full rounded-full py-3 bg-black text-white font-semibold transition-colors duration-200 hover:bg-gray-800;
+    @apply w-full rounded-full py-3 text-sm bg-black text-white font-semibold transition-colors duration-200 hover:bg-gray-800;
   }
 
   .button-secondary {
-    @apply w-full rounded-full py-2.5 text-black bg-white border-2 border-black font-semibold transition-colors duration-200 hover:bg-gray-300;
+    @apply w-full rounded-full py-3 text-sm text-black bg-white border-2 border-black font-semibold transition-colors duration-200 hover:bg-gray-300;
   }
 
   .button-danger {
-    @apply w-full rounded-full py-3 text-red-700 bg-red-100 font-semibold transition-colors duration-200 hover:bg-red-200;
+    @apply w-full rounded-full py-3 text-sm text-red-700 bg-red-100 font-semibold transition-colors duration-200 hover:bg-red-200;
   }
 
   .button-google {
-    @apply w-full rounded-full py-3 bg-white text-black font-semibold flex items-center justify-center gap-2 transition-colors duration-200 hover:bg-gray-100 border-1 border-gray-300;
+    @apply w-full rounded-full py-3 text-sm bg-white text-black font-semibold flex items-center justify-center gap-2 transition-colors duration-200 hover:bg-gray-100 border-1 border-gray-300;
   }
 
   .text-link {
@@ -22,11 +22,11 @@
   }
 
   .text-error {
-    @apply text-red-600;
+    @apply text-red-600 text-sm;
   }
 
   .input-field {
-    @apply w-full px-5 text-black py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2;
+    @apply w-full px-5 text-black py-2.5 text-sm rounded-full border border-gray-300 focus:outline-none focus:ring-1;
   }
 }
 

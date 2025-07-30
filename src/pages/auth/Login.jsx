@@ -35,7 +35,7 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen min-w-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen min-w-screen flex items-center justify-center mx-auto bg-white">
             <LoginForm onSuccess={handleLoginSuccess} />
         </div>
     );
