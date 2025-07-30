@@ -80,12 +80,43 @@ export const authAPI = {
     login: (credentials) => apiInstance.post("/login", credentials),
     register: (userData) => apiInstance.post("/register", userData),
     googleRedirectUrl: () => `${API_URL}/auth/google/redirect`,
-    googleCallback: (searchParams) => apiInstance.get(`/auth/google/callback?${searchParams}`),
+    googleCallback: (searchParams) => {
+        try {
+            const urlParams = new URLSearchParams(searchParams);
+            const token = urlParams.get('token');
+            const userParam = urlParams.get('user');
+            
+            if (!token || !userParam) {
+                throw new Error('Missing token or user data');
+            }
+            
+            const user = JSON.parse(decodeURIComponent(userParam));
+            
+            return Promise.resolve({
+                data: {
+                    status: 'success',
+                    data: {
+                        user: {
+                            user_id: user.id,
+                            fullname: user.fullname,
+                            username: user.username,
+                            email: user.email,
+                            role: user.role,
+                            created_at: user.created_at,
+                            updated_at: user.updated_at
+                        },
+                        token: decodeURIComponent(token)
+                    }
+                }
+            });
+        } catch (error) {
+            return Promise.reject(new Error('Failed to parse Google callback data'));
+        }
+    },
     logout: () => apiInstance.post("/logout"),
     getUser: () => apiInstance.get("/user"),
     forgotPassword: (email) => apiInstance.post("/forgot-password", { email }),
     resetPassword: (data) => apiInstance.post("/reset-password", data),
-    googleRedirect: () => `${API_URL}/auth/google/redirect`,
 };
 
 export const blogAPI = {
