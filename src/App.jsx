@@ -4,8 +4,10 @@ import { useAuth } from './context/Auth'
 // Auth Pages
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
+import GoogleCallback from './pages/auth/GoogleCallback'
 // Main Pages
 import Home from './pages/Home'
+import BlogDetail from './pages/blog/BlogDetail'
 import AdminDashboard from './pages/dashboard/Home'
 // Components
 import ProtectedRoute from './components/ProtectedRoute'
@@ -21,15 +23,45 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      {/* <Route path="/home"element={<Home />}/> */}
+      <Route path="/home"element={<Home />}/>
+      <Route path="/" element={<Navigate to="/home" replace />} />
+
+      <Route path="/auth/google/callback" element={<GoogleCallback />} />
+
+      <Route 
+        path="/login" 
+        element={
+          isAuthenticated ? (
+            user?.role === 'admin' ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <Login />
+          )
+        } 
+      />
+      <Route 
+        path="/register" 
+        element={
+          isAuthenticated ? (
+            user?.role === 'admin' ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          ) : (
+            <Register />
+          )
+        } 
+      />
 
       <Route
-        path="/home"
+        path="/blog/:id"
         element={
-          <ProtectedRoute requiredRole="user">
-            <Home />
+          <ProtectedRoute>
+            <BlogDetail />
           </ProtectedRoute>
         }
       />
@@ -43,35 +75,7 @@ function App() {
         }
       />
 
-      <Route
-        path="/"
-        element={
-          isAuthenticated ? (
-            user?.role === 'admin' ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <Navigate to="/home" replace />
-            )
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
-
-      <Route
-        path="*"
-        element={
-          isAuthenticated ? (
-            user?.role === 'admin' ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <Navigate to="/home" replace />
-            )
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   )
 }

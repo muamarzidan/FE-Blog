@@ -7,6 +7,14 @@ const Home = () => {
         await logout();
     };
 
+    const handleClickBlogDetail = (blogId) => {
+        if (isAuthenticated) {
+            window.location.href = `/blog/${blogId}`;
+        } else {
+            window.location.href = '/login';
+        }
+    }
+
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
@@ -16,7 +24,7 @@ const Home = () => {
                         <div>
                             <em className="text-2xl font-semibold text-gray-900">GoBlog</em>
                         </div>
-                        <div className="flex items-center gap-2 space-x-4">
+                        <div className="flex items-center space-x-4">
                             {
                                 isAuthenticated ? (
                                     <>
@@ -25,18 +33,26 @@ const Home = () => {
                                         </p>
                                         <button
                                             onClick={handleLogout}
-                                            className="button-danger cursor-pointer"
+                                            className="button-danger px-2 cursor-pointer"
                                         >
                                             Logout
                                         </button>
                                     </>
                                 ) : (
-                                    <a
-                                        href='/login'
-                                        className="button-primary"
-                                    >
-                                        Login
-                                    </a>
+                                    <>
+                                        <a
+                                            href='/login'
+                                            className="button-primary px-6 cursor-pointer"
+                                        >
+                                            Login
+                                        </a>
+                                        <a
+                                            href='/register'
+                                            className="button-secondary px-6 cursor-pointer"
+                                        >
+                                            Register
+                                        </a>
+                                    </>
                                 )
                             }
                         </div>
@@ -51,19 +67,6 @@ const Home = () => {
                         Daftar Blog
                     </h2>
 
-                    {/* User Info */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                        <h3 className="font-medium text-blue-800">User Information:</h3>
-                        <div className="mt-2 text-sm text-blue-700">
-                            <p><strong>ID:</strong> {user?.user_id}</p>
-                            <p><strong>Name:</strong> {user?.fullname}</p>
-                            <p><strong>Username:</strong> {user?.username}</p>
-                            <p><strong>Email:</strong> {user?.email}</p>
-                            <p><strong>Role:</strong> {user?.role}</p>
-                        </div>
-                    </div>
-
-                    {/* Blog List Placeholder */}
                     <div className="text-center py-12">
                         <div className="text-gray-400 text-6xl mb-4">📝</div>
                         <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -72,6 +75,18 @@ const Home = () => {
                         <p className="text-gray-600">
                             Fitur daftar blog akan ditambahkan selanjutnya.
                         </p>
+
+                        <a className="mt-6" onClick={() => handleClickBlogDetail(1)}>
+                            <div className="bg-gray-100 p-4 rounded-lg shadow">
+                                <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                                    Card Title
+                                </h4>
+                                <p className="text-gray-600">
+                                    This is a placeholder for a card that can be used to display blog posts or other content.
+                                </p>
+                            </div>
+                        </a>
+
                     </div>
                 </div>
             </main>

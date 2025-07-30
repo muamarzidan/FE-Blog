@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAuth } from '../../context/Auth';
+import GoogleLoginButton from '../moleculs/GoogleLoginButton';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
 
 
@@ -115,6 +116,24 @@ const LoginForm = ({ onSuccess }) => {
                         'Masuk'
                     )}
                 </button>
+
+                <div className="">
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-300" />
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-gray-50 text-gray-500">Atau</span>
+                        </div>
+                    </div>
+
+                    <div className="mt-6">
+                        <GoogleLoginButton 
+                            onSuccess={onSuccess}
+                            disabled={isLoading}
+                        />
+                    </div>
+                </div>
             </form>
 
             <div className="mt-6 text-center">
@@ -135,7 +154,6 @@ const LoginForm = ({ onSuccess }) => {
                 </Link>
             </div>
 
-            {/* Demo credentials */}
             <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <h3 className="font-medium text-yellow-800 mb-2">Demo Credentials:</h3>
                 <div className="text-sm text-yellow-700 space-y-1">

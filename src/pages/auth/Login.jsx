@@ -12,14 +12,26 @@ export default function Login() {
 
     useEffect(() => {
         if (isAuthenticated && user) {
-            const from = location.state?.from?.pathname || (user.role === 'admin' ? '/dashboard' : '/home');
-            navigate(from, { replace: true });
+            const from = location.state?.from?.pathname || null;
+            
+            if (from && from !== '/login') {
+                navigate(from, { replace: true });
+            } else {
+                const defaultPath = user.role === 'admin' ? '/dashboard' : '/home';
+                navigate(defaultPath, { replace: true });
+            }
         }
     }, [isAuthenticated, user, navigate, location]);
 
     const handleLoginSuccess = (user) => {
-        const from = location.state?.from?.pathname || (user.role === 'admin' ? '/dashboard' : '/home');
-        navigate(from, { replace: true });
+        const from = location.state?.from?.pathname || null;
+        
+        if (from && from !== '/login') {
+            navigate(from, { replace: true });
+        } else {
+            const defaultPath = user.role === 'admin' ? '/dashboard' : '/home';
+            navigate(defaultPath, { replace: true });
+        }
     };
 
     return (

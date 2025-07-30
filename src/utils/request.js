@@ -79,8 +79,8 @@ apiInstance.interceptors.response.use(
 export const authAPI = {
     login: (credentials) => apiInstance.post("/login", credentials),
     register: (userData) => apiInstance.post("/register", userData),
-    registerLoginByGoogle: () => apiInstance.get("/auth/google/redirect"),
-    registerLoginByGoogleCallback: () => apiInstance.get("/auth/google/callback"),
+    googleRedirectUrl: () => `${API_URL}/auth/google/redirect`,
+    googleCallback: (searchParams) => apiInstance.get(`/auth/google/callback?${searchParams}`),
     logout: () => apiInstance.post("/logout"),
     getUser: () => apiInstance.get("/user"),
     forgotPassword: (email) => apiInstance.post("/forgot-password", { email }),

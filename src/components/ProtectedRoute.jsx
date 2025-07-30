@@ -4,12 +4,12 @@ import { useAuth } from '../context/Auth';
 import LoadingSpinner from './moleculs/LoadingSpinner';
 
 
-const ProtectedRoute = ({ children, requiredRole = null }) => {
-    const { isAuthenticated, isLoading, user } = useAuth();
+const ProtectedRoute = ({ children, requiredRole }) => {
+    const { isAuthenticated, user, isLoading } = useAuth();
     const location = useLocation();
 
     if (isLoading) {
-        return <LoadingSpinner />;
+        return <LoadingSpinner />
     }
 
     if (!isAuthenticated) {
@@ -17,11 +17,8 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
     }
 
     if (requiredRole && user?.role !== requiredRole) {
-        if (user?.role === 'admin') {
-            return <Navigate to="/dashboard" replace />;
-        } else {
-            return <Navigate to="/home" replace />;
-        }
+        const redirectTo = user?.role === 'admin' ? '/dashboard' : '/home';
+        return <Navigate to={redirectTo} replace />;
     }
 
     return children;

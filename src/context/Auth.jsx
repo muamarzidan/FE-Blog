@@ -37,6 +37,11 @@ const authReducer = (state, action) => {
                 isAuthenticated: true,
                 isLoading: false,
             };
+        case 'AUTH_INIT_COMPLETE':
+            return {
+                ...state,
+                isLoading: false,
+            };
         default:
             return state;
     }
@@ -48,24 +53,26 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkAuth = async () => {
             const token = getToken();
+            
             if (token) {
                 try {
                     const response = await authAPI.getUser();
                     if (response.data.status === 'success') {
                         dispatch({
                             type: 'SET_USER',
-                            payload: response.data.data,
+                            payload: response.data.data.user,
                         });
                     } else {
                         removeToken();
                         dispatch({ type: 'LOGOUT' });
                     }
                 } catch (error) {
+                    console.error('Auth check failed:', error);
                     removeToken();
                     dispatch({ type: 'LOGOUT' });
                 }
             } else {
-                dispatch({ type: 'SET_LOADING', payload: false });
+                dispatch({ type: 'AUTH_INIT_COMPLETE' });
             }
         };
 
@@ -147,11 +154,52 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const googleLogin = () => {
+        window.location.href = authAPI.googleRedirectUrl();
+    };
+
+    const handleGoogleCallback = async (searchParams, directData = null) => {
+        try {
+            dispatch({ type: 'SET_LOADING', payload: true });
+            
+            let responseData;
+            
+            if (directData) {
+                responseData = directData;
+            } else {
+                const response = await authAPI.googleCallback(searchParams);
+                if (response.data.status === 'success') {
+                    responseData = response.data.data;
+                } else {
+                    throw new Error('Google login failed');
+                }
+            }
+            
+            const { user, token } = responseData;
+            setToken(token);
+            dispatch({
+                type: 'LOGIN_SUCCESS',
+                payload: { user, token },
+            });
+            return { success: true, user };
+            
+        } catch (error) {
+            dispatch({ type: 'SET_LOADING', payload: false });
+            console.error('Google login error:', error);
+            return {
+                success: false,
+                error: 'Terjadi kesalahan saat login dengan Google'
+            };
+        }
+    };
+
     const value = {
         ...state,
         login,
         register,
         logout,
+        googleLogin,
+        handleGoogleCallback,
     };
 
     return (

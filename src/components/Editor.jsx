@@ -15,7 +15,7 @@ const Editor = () => {
                     list: List,
                 },
                 placeholder: "Tulis sesuatu...",
-                autofocus: true,
+                autofoccus: true,
                 onReady: () => {
                     console.log("Editor.js is ready to work!");
                 },
