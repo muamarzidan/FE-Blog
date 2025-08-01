@@ -90,6 +90,7 @@ const ResetPasswordForm = () => {
             
             if (result.success) {
                 setIsSuccess(true);
+                toast.success("Password berhasil direset.");
             } else {
                 setIsSuccess(false);
                 toast.error("Gagal mereset password. Mohon periksa kembali password Anda.");
