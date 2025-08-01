@@ -87,16 +87,19 @@ const LoginForm = ({ onSuccess }) => {
                         <label htmlFor="email" className="block text-sm font-medium text-gray-900">
                             Email
                         </label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={handleEmailChange}
-                            className={`input-field ${emailError ? 'border-red-500 focus:border-red-500' : ''}`}
-                            placeholder="Masukkan email Anda"
-                            disabled={isLoading}
-                        />
-                        {emailError && <p className="text-error">{emailError}</p>}
+                        <div>
+                            <input
+                                // type="email"
+                                type="text"
+                                id="email"
+                                value={email}
+                                onChange={handleEmailChange}
+                                className={`input-field ${emailError ? 'border-red-500 focus:border-red-500' : ''}`}
+                                placeholder="Masukkan email Anda"
+                                disabled={isLoading}
+                            />
+                            {emailError && <p className="text-error">{emailError}</p>}
+                        </div>
                     </div>
 
                     <div className="space-y-2">

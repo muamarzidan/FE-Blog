@@ -1,7 +1,10 @@
+import { Link } from 'react-router-dom';
+
 import { useAuth } from '../context/Auth';
 
 const Home = () => {
     const { user, logout, isAuthenticated } = useAuth();
+    const isEmailVerified = user?.email_verified_at !== null;
 
     const handleLogout = async () => {
         await logout();
@@ -72,9 +75,11 @@ const Home = () => {
                         <h3 className="text-lg font-medium text-gray-900 mb-2">
                             Blog List Coming Soon
                         </h3>
+                        
                         <p className="text-gray-600">
                             Fitur daftar blog akan ditambahkan selanjutnya.
                         </p>
+
 
                         <a className="mt-6" onClick={() => handleClickBlogDetail(1)}>
                             <div className="bg-gray-100 p-4 rounded-lg shadow">
@@ -87,6 +92,10 @@ const Home = () => {
                             </div>
                         </a>
 
+                        <p>Test email verisikasi</p>
+                        <Link to="/email/verification" className="text-link">
+                            Go to Email Verification
+                        </Link>
                     </div>
                 </div>
             </main>

@@ -25,12 +25,14 @@ function App() {
     return <LoadingSpinner fullScreen />
   }
 
+
   return (
     <>
       <Toaster
         position="top-center"
         toastOptions={{
           className: 'text-center',
+          duration: 3000,
         }}
       />
       <Routes>
