@@ -98,18 +98,38 @@ export const AuthProvider = ({ children }) => {
                     payload: { user, token },
                 });
                 return { success: true, user };
+            } else {
+                dispatch({ type: 'SET_LOADING', payload: false });
+                return {
+                    success: false,
+                    message: response.data.message || 'Login gagal',
+                    errors: response.data.errors || null
+                };
             }
         } catch (error) {
             dispatch({ type: 'SET_LOADING', payload: false });
-            if (error.response?.data?.error) {
+            
+            if (error.response?.data) {
+                const errorData = error.response.data;
+                
+                if ((error.response.status === 422 || error.response.status === 401)) {
+                    return {
+                        success: false,
+                        errors: errorData.errors || errorData.error || 'Kredensial tidak valid',
+                        message: errorData.message || 'Terjadi kesalahan validasi'
+                    };
+                }
+                
                 return {
                     success: false,
-                    error: error.response.data.error
+                    message: errorData.message || 'Terjadi kesalahan saat login',
+                    errors: errorData.errors || errorData.error || null
                 };
             }
+            
             return {
                 success: false,
-                error: 'Terjadi kesalahan saat login'
+                message: 'Terjadi kesalahan saat login'
             };
         }
     };
@@ -130,15 +150,34 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             dispatch({ type: 'SET_LOADING', payload: false });
-            if (error.response?.data?.error) {
+            
+            if (error.response?.data) {
+                const errorData = error.response.data;
+
+                if ((error.response.status === 422 || error.response.status === 401) && errorData.error) {
+                    return {
+                        success: false,
+                        errors: errorData.error,
+                        message: errorData.error.message || 'Terjadi kesalahan validasi'
+                    };
+                }
+                
+                if (error.response.status === 429) {
+                    return {
+                        success: false,
+                        message: 'Terlalu banyak percobaan. Silakan coba lagi nanti.'
+                    };
+                }
+                
                 return {
                     success: false,
-                    error: error.response.data.error
+                    message: errorData.error?.message || errorData.message || 'Terjadi kesalahan saat registrasi'
                 };
             }
+            
             return {
                 success: false,
-                error: 'Terjadi kesalahan saat registrasi'
+                message: 'Terjadi kesalahan saat registrasi'
             };
         }
     };

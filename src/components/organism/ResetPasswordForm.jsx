@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
 
 import { useAuth } from '../../context/Auth';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
@@ -24,7 +25,7 @@ const ResetPasswordForm = () => {
         const email = searchParams.get('email');
         
         if (!token || !email) {
-            setErrors({ general: 'Token atau email tidak valid. Silakan request reset password lagi.' });
+            navigate('/login', { replace: true });
             return;
         }
 
@@ -86,7 +87,8 @@ const ResetPasswordForm = () => {
             if (result.success) {
                 setIsSuccess(true);
             } else {
-                setErrors({ general: result.error });
+                setIsSuccess(false);
+                toast.error("Gagal mereset password. Mohon periksa kembali password Anda.");
             }
         } catch (error) {
             setErrors({ general: 'Terjadi kesalahan saat reset password' });
@@ -97,27 +99,25 @@ const ResetPasswordForm = () => {
 
     if (isSuccess) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-md w-full space-y-8">
-                    <div className="text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-                            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                        </div>
-                        <h1 className="text-3xl font-bold text-gray-900">Password Berhasil Direset</h1>
-                        <p className="text-gray-600 mt-2">
-                            Password Anda telah berhasil direset. Silakan login dengan password baru Anda.
-                        </p>
-                        
-                        <div className="mt-6">
-                            <Link
-                                to="/login"
-                                className="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            >
-                                Login Sekarang
-                            </Link>
-                        </div>
+            <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
+                <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h1 className="text-3xl font-bold text-gray-900">Password Berhasil Direset</h1>
+                    <p className="text-gray-600 mt-2">
+                        Password Anda telah berhasil direset. Silakan login dengan password baru Anda.
+                    </p>
+                    
+                    <div className="mt-6">
+                        <Link
+                            to="/login"
+                            className="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                            Login Sekarang
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -125,24 +125,18 @@ const ResetPasswordForm = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8">
-                <div className="text-center">
-                    <h1 className="text-3xl font-bold text-gray-900">Reset Password</h1>
-                    <p className="text-gray-600 mt-2">
-                        Masukkan password baru untuk akun <strong>{formData.email}</strong>
-                    </p>
-                </div>
+        <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
+            <div className="text-center space-y-1">
+                <h1 className="text-3xl font-bold text-gray-900">Reset Password</h1>
+                <p className="text-gray-500">
+                    Masukkan password baru untuk akun <strong>{formData.email}</strong> Anda
+                </p>
+            </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {errors.general && (
-                        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-                            {errors.general}
-                        </div>
-                    )}
-
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                             Password Baru
                         </label>
                         <input
@@ -154,12 +148,13 @@ const ResetPasswordForm = () => {
                             className="input-field"
                             placeholder="Masukkan password baru"
                             disabled={isLoading}
+                            required
                         />
                         {errors.password && <p className="text-error mt-1">{errors.password}</p>}
                     </div>
 
-                    <div>
-                        <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="space-y-2">
+                        <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-900">
                             Konfirmasi Password Baru
                         </label>
                         <input
@@ -171,44 +166,38 @@ const ResetPasswordForm = () => {
                             className="input-field"
                             placeholder="Konfirmasi password baru"
                             disabled={isLoading}
+                            required
                         />
                         {errors.password_confirmation && <p className="text-error mt-1">{errors.password_confirmation}</p>}
                     </div>
+                </div>
 
+                <div className="space-y-1">
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="button-primary cursor-pointer"
+                        className={`button-primary ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     >
                         {isLoading ? (
-                            <>
+                            <div className="flex items-center justify-center gap-2">
                                 <LoadingSpinner size="small" />
-                                <span className="ml-2">Mereset Password...</span>
-                            </>
+                                <span>Mereset Password...</span>
+                            </div>
                         ) : (
                             'Reset Password'
                         )}
                     </button>
-                </form>
 
-                <div className="text-center">
-                    <p className="text-gray-600">
-                        Ingat password Anda?{' '}
-                        <Link to="/login" className="text-link">
-                            Kembali ke Login
-                        </Link>
-                    </p>
-                </div>
-
-                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <h3 className="font-medium text-yellow-800 mb-2">⚠️ Penting:</h3>
-                    <div className="text-sm text-yellow-700 space-y-1">
-                        <p>• Link reset password hanya berlaku selama 60 menit</p>
-                        <p>• Password minimal 8 karakter</p>
-                        <p>• Pastikan password dan konfirmasi password sama</p>
+                    <div className="text-center">
+                        <p className="text-gray-500 text-sm">
+                            Ingat password Anda?{' '}
+                            <Link to="/login" className="text-link">
+                                Kembali ke Login
+                            </Link>
+                        </p>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     );
 };

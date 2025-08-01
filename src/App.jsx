@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 import { useAuth } from './context/Auth'
 // Auth Pages
@@ -25,95 +26,97 @@ function App() {
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/home" replace />} />
-      <Route path="/home" element={<Home />}/>
-      <Route path="/auth/google/callback" element={<GoogleCallback />} />
-      <Route 
-        path="/login" 
-        element={
-          isAuthenticated ? (
-            user?.role === 'admin' ? (
-              <Navigate to="/dashboard" replace />
+    <>
+      <Toaster position="top-center" />
+      <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<Home />}/>
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
+        <Route 
+          path="/login" 
+          element={
+            isAuthenticated ? (
+              user?.role === 'admin' ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/home" replace />
+              )
             ) : (
-              <Navigate to="/home" replace />
+              <Login />
             )
-          ) : (
-            <Login />
-          )
-        } 
-      />
-      <Route 
-        path="/register" 
-        element={
-          isAuthenticated ? (
-            user?.role === 'admin' ? (
-              <Navigate to="/dashboard" replace />
+          } 
+        />
+        <Route 
+          path="/register" 
+          element={
+            isAuthenticated ? (
+              user?.role === 'admin' ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/home" replace />
+              )
             ) : (
-              <Navigate to="/home" replace />
+              <Register />
             )
-          ) : (
-            <Register />
-          )
-        } 
-      />
-      <Route 
-        path="/forgot-password" 
-        element={
-          isAuthenticated ? (
-            user?.role === 'admin' ? (
-              <Navigate to="/dashboard" replace />
+          } 
+        />
+        <Route 
+          path="/forgot-password" 
+          element={
+            isAuthenticated ? (
+              user?.role === 'admin' ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/home" replace />
+              )
             ) : (
-              <Navigate to="/home" replace />
+              <ForgotPassword />
             )
-          ) : (
-            <ForgotPassword />
-          )
-        } 
-      />
-      <Route 
-        path="/reset-password" 
-        element={
-          isAuthenticated ? (
-            user?.role === 'admin' ? (
-              <Navigate to="/dashboard" replace />
+          } 
+        />
+        <Route 
+          path="/reset-password" 
+          element={
+            isAuthenticated ? (
+              user?.role === 'admin' ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/home" replace />
+              )
             ) : (
-              <Navigate to="/home" replace />
+              <ResetPassword />
             )
-          ) : (
-            <ResetPassword />
-          )
-        } 
-      />
+          } 
+        />
 
-      {/* Authenticated Only Routes */}
-      <Route
-        path="/email/verification"
-        element={
-          <ProtectedRoute>
-            <EmailVerification />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/blog/:id"
-        element={
-          <ProtectedRoute>
-            <BlogDetail />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<Navigate to="/home" replace />} />
-    </Routes>
+        <Route
+          path="/email/verification"
+          element={
+              <EmailVerification />
+            // <ProtectedRoute>
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/blog/:id"
+          element={
+            <ProtectedRoute>
+              <BlogDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/home" replace />} />
+      </Routes>
+    </>
   )
 }
 
-export default App
+export default App;

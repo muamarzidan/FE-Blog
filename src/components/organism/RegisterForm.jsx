@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAuth } from '../../context/Auth';
+import { useRateLimit } from '../../hooks/useRateLimit';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
 
 
 const RegisterForm = ({ onSuccess }) => {
     const { register, isLoading } = useAuth();
+    const rateLimit = useRateLimit('register', 5, 60 * 1000); // 5 attempts per minute
+    
     const [formData, setFormData] = useState({
-        // photo: null,
         fullname: '',
         username: '',
         email: '',
@@ -16,6 +18,7 @@ const RegisterForm = ({ onSuccess }) => {
         password_confirmation: '',
     });
     const [errors, setErrors] = useState({});
+    const [serverMessage, setServerMessage] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,17 +26,22 @@ const RegisterForm = ({ onSuccess }) => {
             ...prev,
             [name]: value
         }));
+        
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
                 [name]: null
             }));
         }
+        
+        if (serverMessage) {
+            setServerMessage('');
+        }
     };
 
     const validateForm = () => {
         const newErrors = {};
-        // if (!formData.photo) newErrors.photo = 'Foto wajib diisi';
+        
         if (!formData.fullname) newErrors.fullname = 'Nama lengkap wajib diisi';
         if (!formData.username) newErrors.username = 'Username wajib diisi';
         if (!formData.email) newErrors.email = 'Email wajib diisi';
@@ -44,16 +52,14 @@ const RegisterForm = ({ onSuccess }) => {
             newErrors.password_confirmation = 'Konfirmasi password tidak cocok';
         }
 
-        // if (formData.photo && !formData.photo.name.match(/\.(jpg|jpeg|png|gif)$/)) {
-        //     newErrors.photo = 'Format file tidak didukung. Gunakan JPG, JPEG, PNG atau GIF';
-        // } else if (formData.photo && formData.photo.size >  1024) {
-        //     newErrors.photo = 'Ukuran file terlalu besar. Maksimal 1MB';
-        // }
+        if (formData.username && formData.username.length < 8) {
+            newErrors.username = 'Username minimal 8 karakter';
+        }
 
         if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'Format email tidak valid';
-        } else if (formData.email && formData.email.length < 5) {
-            newErrors.email = 'Email minimal 5 karakter';
+        } else if (formData.email && formData.email.length < 8) {
+            newErrors.email = 'Email minimal 8 karakter';
         }
 
         if (formData.password && formData.password.length < 8) {
@@ -68,6 +74,12 @@ const RegisterForm = ({ onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
+        setServerMessage('');
+
+        if (rateLimit.isBlocked) {
+            setServerMessage(`Terlalu banyak percobaan registrasi. Coba lagi dalam ${rateLimit.formatTimeRemaining()}`);
+            return;
+        }
 
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
@@ -78,46 +90,43 @@ const RegisterForm = ({ onSuccess }) => {
         const result = await register(formData);
 
         if (result.success) {
+            rateLimit.reset();
             onSuccess?.(result.user);
         } else {
-            if (typeof result.error === 'string') {
-                setErrors({ general: result.error });
+            rateLimit.addAttempt();
+            
+            if (result.errors) {
+                const fieldErrors = {};
+                
+                Object.keys(result.errors).forEach(field => {
+                    if (field !== 'message' && Array.isArray(result.errors[field])) {
+                        fieldErrors[field] = result.errors[field][0];
+                    }
+                });
+                
+                setErrors(fieldErrors);
+                setServerMessage(result.message);
             } else {
-                setErrors(result.error);
+                setServerMessage(result.message);
             }
         }
     };
 
     return (
-        <div className="max-w-md mx-auto rounded-2xl bg-white py-6 px-12 shadow-xl shadow-gray-100 space-y-6">
+        <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-6 px-12 shadow-xl shadow-gray-100 space-y-6">
             <div className="text-center space-y-1">
                 <h1 className="text-3xl font-bold text-gray-900">Daftar</h1>
                 <p className="text-gray-500 ">Daftarkan akun Anda terlebih dahulu</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
-                {/* <div className="flex flex-col items-center">
-                    <input
-                        type="file"
-                        id="photo"
-                        name="photo"
-                        accept="image/*"
-                        onChange={(e) => setFormData({ ...formData, photo: e.target.files[0] })}
-                        className="rounded-full border border-gray-300 w-[100px] h-[100px] cursor-pointer"
-                        disabled={isLoading}
-                    />
-                    <label htmlFor="photo" className="block text-sm font-medium text-gray-900 mb-2">
-                        Foto Profil
-                    </label>
-                    {errors.photo && <p className="text-error">{errors.photo}</p>}
-                </div> */}
+                {rateLimit.isBlocked && (
+                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+                        Mohon coba beberapa menit lagi
+                    </div>
+                )}
 
                 <div className="space-y-2">
-                    {errors.general && (
-                        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-                            {errors.general}
-                        </div>
-                    )}
                     <div className="space-y-2">
                         <label htmlFor="fullname" className="block text-sm font-medium text-gray-900 mb-2">
                             Nama Lengkap
@@ -129,9 +138,10 @@ const RegisterForm = ({ onSuccess }) => {
                                 name="fullname"
                                 value={formData.fullname}
                                 onChange={handleChange}
-                                className="input-field"
+                                className={`input-field ${errors.fullname ? 'border-red-500 focus:border-red-500' : ''}`}
                                 placeholder="Masukkan nama lengkap Anda"
-                                disabled={isLoading}
+                                disabled={isLoading || rateLimit.isBlocked}
+                                required
                             />
                             {errors.fullname && <p className="text-error">{errors.fullname}</p>}
                         </div>
@@ -148,9 +158,10 @@ const RegisterForm = ({ onSuccess }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleChange}
-                                className="input-field"
+                                className={`input-field ${errors.username ? 'border-red-500 focus:border-red-500' : ''}`}
                                 placeholder="Masukkan username"
-                                disabled={isLoading}
+                                disabled={isLoading || rateLimit.isBlocked}
+                                required
                             />
                             {errors.username && <p className="text-error">{errors.username}</p>}
                         </div>
@@ -167,9 +178,10 @@ const RegisterForm = ({ onSuccess }) => {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="input-field"
+                                className={`input-field ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
                                 placeholder="Masukkan email"
-                                disabled={isLoading}
+                                disabled={isLoading || rateLimit.isBlocked}
+                                required
                             />
                             {errors.email && <p className="text-error">{errors.email}</p>}
                         </div>
@@ -186,9 +198,9 @@ const RegisterForm = ({ onSuccess }) => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="input-field"
+                                className={`input-field ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
                                 placeholder="Masukkan password"
-                                disabled={isLoading}
+                                disabled={isLoading || rateLimit.isBlocked}
                             />
                             {errors.password && <p className="text-error">{errors.password}</p>}
                         </div>
@@ -205,9 +217,9 @@ const RegisterForm = ({ onSuccess }) => {
                                 name="password_confirmation"
                                 value={formData.password_confirmation}
                                 onChange={handleChange}
-                                className="input-field"
+                                className={`input-field ${errors.password_confirmation ? 'border-red-500 focus:border-red-500' : ''}`}
                                 placeholder="Konfirmasi password"
-                                disabled={isLoading}
+                                disabled={isLoading || rateLimit.isBlocked}
                             />
                             {errors.password_confirmation && <p className="text-error">{errors.password_confirmation}</p>}
                         </div>
@@ -216,8 +228,8 @@ const RegisterForm = ({ onSuccess }) => {
 
                 <button
                     type="submit"
-                    disabled={isLoading}
-                    className="button-primary cursor-pointer"
+                    disabled={isLoading || rateLimit.isBlocked}
+                    className="button-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {isLoading ? (
                         <>
