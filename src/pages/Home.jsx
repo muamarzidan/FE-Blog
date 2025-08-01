@@ -29,7 +29,7 @@ const Home = () => {
                                 isAuthenticated ? (
                                     <>
                                         <p className="text-sm text-gray-700">
-                                            Welcome, {user?.fullname}
+                                            Welcome, {user?.username}
                                         </p>
                                         <button
                                             onClick={handleLogout}

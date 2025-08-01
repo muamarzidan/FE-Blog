@@ -16,6 +16,8 @@ const LoginForm = ({ onSuccess }) => {
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
+
+    
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
         setEmailError('');
@@ -52,32 +54,11 @@ const LoginForm = ({ onSuccess }) => {
 
         try {
             const result = await login({ email, password });
-            console.log('Login result:', result);
             if (result?.success) {
                 rateLimit.reset();
                 onSuccess?.(result.user);
             } else {
                 rateLimit.addAttempt();
-                
-                let errorMsg = 'Login gagal';
-                if (result?.errors) {
-                    if (typeof result.errors === 'string') {
-                        errorMsg = result.errors;
-                    } else if (typeof result.errors === 'object') {
-                        if (result.errors.email) setEmailError(result.errors.email);
-                        if (result.errors.password) setPasswordError(result.errors.password);
-                        
-                        if (result.errors.general || result.errors.message) {
-                            errorMsg = result.errors.message;
-                        } else if (result.message) {
-                            errorMsg = result.message;
-                        }
-                    }
-                } else if (result?.message) {
-                    errorMsg = result.message;
-                }
-                
-                setErrorMessage(errorMsg);
                 toast.error("Login gagal. Mohon periksa kembali email atau password Anda.");
             }
         } catch (error) {
@@ -88,7 +69,7 @@ const LoginForm = ({ onSuccess }) => {
 
 
     return (
-        <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-6 px-12 shadow-xl shadow-gray-200">
+        <div className="max-w-[380px] w-full mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200">
             <div className="text-center mb-6 space-y-1">
                 <h1 className="text-3xl font-bold text-gray-900">Masuk</h1>
                 <p className="text-gray-500">Masuk ke akun Anda terlebih dahulu</p>
@@ -101,7 +82,7 @@ const LoginForm = ({ onSuccess }) => {
                     </div>
                 )}
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                     <div className="space-y-2">
                         <label htmlFor="email" className="block text-sm font-medium text-gray-900">
                             Email
@@ -114,7 +95,6 @@ const LoginForm = ({ onSuccess }) => {
                             className={`input-field ${emailError ? 'border-red-500 focus:border-red-500' : ''}`}
                             placeholder="Masukkan email Anda"
                             disabled={isLoading}
-                            required
                         />
                         {emailError && <p className="text-error">{emailError}</p>}
                     </div>
@@ -132,7 +112,6 @@ const LoginForm = ({ onSuccess }) => {
                                 className={`input-field ${passwordError ? 'border-red-500 focus:border-red-500' : ''}`}
                                 placeholder="Masukkan password Anda"
                                 disabled={isLoading}
-                                required
                             />
                             {passwordError && <p className="text-error">{passwordError}</p>}
                             <div className="text-link text-right">

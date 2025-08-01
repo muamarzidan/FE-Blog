@@ -95,7 +95,7 @@ const ForgotPasswordForm = () => {
     };
 
     return (
-        <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
+        <div className="max-w-[380px] w-full mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
             <div className="text-center space-y-1">
                 <h1 className="text-3xl font-bold text-gray-900">Lupa Password</h1>
                 <p className="text-gray-500">
