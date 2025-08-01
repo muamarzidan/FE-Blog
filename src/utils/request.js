@@ -41,7 +41,6 @@ apiInstance.interceptors.response.use(
     (error) => {
         if (error.response) {
             const { status, data } = error.response;
-
             switch (status) {
                 case 401:
                     removeToken();

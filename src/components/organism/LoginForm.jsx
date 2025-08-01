@@ -1,78 +1,103 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import toast from "react-hot-toast";
 
 import { useAuth } from '../../context/Auth';
+import { useRateLimit } from '../../hooks/useRateLimit';
 import GoogleLoginButton from '../moleculs/GoogleLoginButton';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
 
 
 const LoginForm = ({ onSuccess }) => {
     const { login, isLoading } = useAuth();
-    const location = useLocation();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
-    const [errors, setErrors] = useState({});
+    const rateLimit = useRateLimit('login', 5, 1 * 60 * 1000);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
-    useEffect(() => {
-        if (location.state?.error) {
-            setErrors({ general: location.state.error });
-            window.history.replaceState({}, document.title);
-        }
-    }, [location.state]);
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        setEmailError('');
+    };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-        if (errors[name]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: null
-            }));
-        }
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+        setPasswordError('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrors({});
+        
+        setEmailError('');
+        setPasswordError('');
 
-        const newErrors = {};
-        if (!formData.email) newErrors.email = 'Email wajib diisi';
-        if (!formData.password) newErrors.password = 'Password wajib diisi';
+        let hasErrors = false;
+        if (!email) {
+            setEmailError('Email wajib diisi');
+            hasErrors = true;
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            setEmailError('Format email tidak valid');
+            hasErrors = true;
+        }
 
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
+        if (!password) {
+            setPasswordError('Password wajib diisi');
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
             return;
         }
 
-        const result = await login(formData);
-
-        if (result.success) {
-            onSuccess?.(result.user);
-        } else {
-            if (typeof result.error === 'string') {
-                setErrors({ general: result.error });
+        try {
+            const result = await login({ email, password });
+            console.log('Login result:', result);
+            if (result?.success) {
+                rateLimit.reset();
+                onSuccess?.(result.user);
             } else {
-                setErrors(result.error);
+                rateLimit.addAttempt();
+                
+                let errorMsg = 'Login gagal';
+                if (result?.errors) {
+                    if (typeof result.errors === 'string') {
+                        errorMsg = result.errors;
+                    } else if (typeof result.errors === 'object') {
+                        if (result.errors.email) setEmailError(result.errors.email);
+                        if (result.errors.password) setPasswordError(result.errors.password);
+                        
+                        if (result.errors.general || result.errors.message) {
+                            errorMsg = result.errors.message;
+                        } else if (result.message) {
+                            errorMsg = result.message;
+                        }
+                    }
+                } else if (result?.message) {
+                    errorMsg = result.message;
+                }
+                
+                setErrorMessage(errorMsg);
+                toast.error("Login gagal. Mohon periksa kembali email atau password Anda.");
             }
+        } catch (error) {
+            rateLimit.addAttempt();
+            toast.error('Terjadi kesalahan saat login. Silakan coba lagi.');
         }
     };
 
+
     return (
-        <div className="max-w-md mx-auto rounded-2xl bg-white py-6 px-12 shadow-xl shadow-gray-100">
+        <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-6 px-12 shadow-xl shadow-gray-200">
             <div className="text-center mb-6 space-y-1">
                 <h1 className="text-3xl font-bold text-gray-900">Masuk</h1>
                 <p className="text-gray-500">Masuk ke akun Anda terlebih dahulu</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-10">
-                {errors.general && (
+                {rateLimit.isBlocked && (
                     <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-                        {errors.general}
+                        Mohon coba beberapa menit lagi
                     </div>
                 )}
 
@@ -84,14 +109,14 @@ const LoginForm = ({ onSuccess }) => {
                         <input
                             type="email"
                             id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="input-field"
+                            value={email}
+                            onChange={handleEmailChange}
+                            className={`input-field ${emailError ? 'border-red-500 focus:border-red-500' : ''}`}
                             placeholder="Masukkan email Anda"
                             disabled={isLoading}
+                            required
                         />
-                        {errors.email && <p className="text-error">{errors.email}</p>}
+                        {emailError && <p className="text-error">{emailError}</p>}
                     </div>
 
                     <div className="space-y-2">
@@ -102,14 +127,14 @@ const LoginForm = ({ onSuccess }) => {
                             <input
                                 type="password"
                                 id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="input-field"
+                                value={password}
+                                onChange={handlePasswordChange}
+                                className={`input-field ${passwordError ? 'border-red-500 focus:border-red-500' : ''}`}
                                 placeholder="Masukkan password Anda"
                                 disabled={isLoading}
+                                required
                             />
-                            {errors.password && <p className="text-error">{errors.password}</p>}
+                            {passwordError && <p className="text-error">{passwordError}</p>}
                             <div className="text-link text-right">
                                 <Link
                                     to="/forgot-password"
@@ -122,11 +147,11 @@ const LoginForm = ({ onSuccess }) => {
                     </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                     <button
                         type="submit"
-                        disabled={isLoading}
-                        className="button-primary cursor-pointer"
+                        disabled={isLoading || rateLimit.isBlocked}
+                        className="button-primary cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
                     >
                         {isLoading ? (
                             <>
@@ -152,7 +177,7 @@ const LoginForm = ({ onSuccess }) => {
                     <div>
                         <GoogleLoginButton
                             onSuccess={onSuccess}
-                            disabled={isLoading}
+                            disabled={isLoading || rateLimit.isBlocked}
                         />
                     </div>
                 </div>
@@ -166,7 +191,6 @@ const LoginForm = ({ onSuccess }) => {
                     </Link>
                 </p>
             </div>
-            <p>lssyhc@example.com / password</p>
         </div>
     );
 };
