@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 import { useAuth } from '../../context/Auth';
 import RegisterForm from '../../components/organism/RegisterForm';
@@ -19,6 +20,7 @@ const Register = () => {
     const handleRegisterSuccess = (user) => {
         const redirectTo = user.role === 'admin' ? '/dashboard' : '/home';
         navigate(redirectTo, { replace: true });
+        toast.success('Pendaftaran akun berhasil!');
     };
 
     return (

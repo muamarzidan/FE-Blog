@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from "react-hot-toast";
 
 import { useAuth } from '../../context/Auth';
 import { useRateLimit } from '../../hooks/useRateLimit';
@@ -8,8 +9,7 @@ import LoadingSpinner from '../moleculs/LoadingSpinner';
 
 const RegisterForm = ({ onSuccess }) => {
     const { register, isLoading } = useAuth();
-    const rateLimit = useRateLimit('register', 5, 60 * 1000); // 5 attempts per minute
-    
+    const rateLimit = useRateLimit('register', 5, 60 * 1000);
     const [formData, setFormData] = useState({
         fullname: '',
         username: '',
@@ -18,7 +18,8 @@ const RegisterForm = ({ onSuccess }) => {
         password_confirmation: '',
     });
     const [errors, setErrors] = useState({});
-    const [serverMessage, setServerMessage] = useState('');
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -33,17 +34,13 @@ const RegisterForm = ({ onSuccess }) => {
                 [name]: null
             }));
         }
-        
-        if (serverMessage) {
-            setServerMessage('');
-        }
     };
 
     const validateForm = () => {
         const newErrors = {};
         
         if (!formData.fullname) newErrors.fullname = 'Nama lengkap wajib diisi';
-        if (!formData.username) newErrors.username = 'Username wajib diisi';
+        if (!formData.username) newErrors.username = 'Nama panggilan wajib diisi';
         if (!formData.email) newErrors.email = 'Email wajib diisi';
         if (!formData.password) newErrors.password = 'Password wajib diisi';
         if (!formData.password_confirmation) {
@@ -52,8 +49,8 @@ const RegisterForm = ({ onSuccess }) => {
             newErrors.password_confirmation = 'Konfirmasi password tidak cocok';
         }
 
-        if (formData.username && formData.username.length < 8) {
-            newErrors.username = 'Username minimal 8 karakter';
+        if (formData.username && formData.username.length < 3) {
+            newErrors.username = 'Nama panggilan minimal 3 karakter';
         }
 
         if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
@@ -74,12 +71,6 @@ const RegisterForm = ({ onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
-        setServerMessage('');
-
-        if (rateLimit.isBlocked) {
-            setServerMessage(`Terlalu banyak percobaan registrasi. Coba lagi dalam ${rateLimit.formatTimeRemaining()}`);
-            return;
-        }
 
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
@@ -94,29 +85,26 @@ const RegisterForm = ({ onSuccess }) => {
             onSuccess?.(result.user);
         } else {
             rateLimit.addAttempt();
-            
-            if (result.errors) {
-                const fieldErrors = {};
-                
-                Object.keys(result.errors).forEach(field => {
-                    if (field !== 'message' && Array.isArray(result.errors[field])) {
-                        fieldErrors[field] = result.errors[field][0];
-                    }
-                });
-                
-                setErrors(fieldErrors);
-                setServerMessage(result.message);
+
+            if (result.message) {
+                if (result.message === "The email has already been taken.") {
+                    toast.error("Email sudah terdaftar");
+                } else if (result.message === "The username has already been taken.") {
+                    toast.error("Nama panggilan sudah terdaftar");
+                } else {
+                    toast.error(result.message);
+                }
             } else {
-                setServerMessage(result.message);
+                toast.error('Terjadi kesalahan saat registrasi. Silakan coba lagi.');
             }
-        }
+        };
     };
 
     return (
-        <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-6 px-12 shadow-xl shadow-gray-100 space-y-6">
+        <div className="max-w-[380px] w-full mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-100 space-y-6">
             <div className="text-center space-y-1">
                 <h1 className="text-3xl font-bold text-gray-900">Daftar</h1>
-                <p className="text-gray-500 ">Daftarkan akun Anda terlebih dahulu</p>
+                <p className="text-gray-500 ">Daftarkan akun Anda untuk bisa mengexplore lebih banyak</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
@@ -139,9 +127,8 @@ const RegisterForm = ({ onSuccess }) => {
                                 value={formData.fullname}
                                 onChange={handleChange}
                                 className={`input-field ${errors.fullname ? 'border-red-500 focus:border-red-500' : ''}`}
-                                placeholder="Masukkan nama lengkap Anda"
+                                placeholder="Masukkan nama lengkap disini"
                                 disabled={isLoading || rateLimit.isBlocked}
-                                required
                             />
                             {errors.fullname && <p className="text-error">{errors.fullname}</p>}
                         </div>
@@ -159,9 +146,8 @@ const RegisterForm = ({ onSuccess }) => {
                                 value={formData.username}
                                 onChange={handleChange}
                                 className={`input-field ${errors.username ? 'border-red-500 focus:border-red-500' : ''}`}
-                                placeholder="Masukkan username"
+                                placeholder="Masukkan nama panggilan disini"
                                 disabled={isLoading || rateLimit.isBlocked}
-                                required
                             />
                             {errors.username && <p className="text-error">{errors.username}</p>}
                         </div>
@@ -179,9 +165,8 @@ const RegisterForm = ({ onSuccess }) => {
                                 value={formData.email}
                                 onChange={handleChange}
                                 className={`input-field ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
-                                placeholder="Masukkan email"
+                                placeholder="Masukkan email disini"
                                 disabled={isLoading || rateLimit.isBlocked}
-                                required
                             />
                             {errors.email && <p className="text-error">{errors.email}</p>}
                         </div>
@@ -199,7 +184,7 @@ const RegisterForm = ({ onSuccess }) => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 className={`input-field ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
-                                placeholder="Masukkan password"
+                                placeholder="Masukkan password disini"
                                 disabled={isLoading || rateLimit.isBlocked}
                             />
                             {errors.password && <p className="text-error">{errors.password}</p>}
@@ -218,7 +203,7 @@ const RegisterForm = ({ onSuccess }) => {
                                 value={formData.password_confirmation}
                                 onChange={handleChange}
                                 className={`input-field ${errors.password_confirmation ? 'border-red-500 focus:border-red-500' : ''}`}
-                                placeholder="Konfirmasi password"
+                                placeholder="Masukan konfirmasi password disini"
                                 disabled={isLoading || rateLimit.isBlocked}
                             />
                             {errors.password_confirmation && <p className="text-error">{errors.password_confirmation}</p>}

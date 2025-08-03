@@ -12,6 +12,7 @@ import GoogleCallback from './pages/auth/GoogleCallback'
 // Main Pages
 import Home from './pages/Home'
 import BlogDetail from './pages/blog/BlogDetail'
+import Search from './pages/blog/Search'
 import AdminDashboard from './pages/dashboard/Home'
 // Components
 import ProtectedRoute from './components/ProtectedRoute'
@@ -27,7 +28,14 @@ function App() {
 
   return (
     <>
-      <Toaster position="top-center" />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          className: 'text-center',
+          duration: 4000,
+        }}
+      />
+      
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />}/>

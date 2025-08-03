@@ -20,6 +20,8 @@ const ResetPasswordForm = () => {
     const [errors, setErrors] = useState({});
     const [isSuccess, setIsSuccess] = useState(false);
 
+
+
     useEffect(() => {
         const token = searchParams.get('token');
         const email = searchParams.get('email');
@@ -57,13 +59,15 @@ const ResetPasswordForm = () => {
         if (!formData.password) {
             newErrors.password = 'Password baru wajib diisi';
         } else if (formData.password.length < 8) {
-            newErrors.password = 'Password minimal 8 karakter';
+            newErrors.password = 'Password baru minimal 8 karakter';
         }
 
         if (!formData.password_confirmation) {
             newErrors.password_confirmation = 'Konfirmasi password wajib diisi';
+        } else if (formData.password_confirmation.length < 8) {
+            newErrors.password_confirmation = 'Konfirmasi password minimal 8 karakter';
         } else if (formData.password !== formData.password_confirmation) {
-            newErrors.password_confirmation = 'Konfirmasi password tidak sama';
+            newErrors.password_confirmation = 'Konfirmasi password tidak sama dengan password baru';
         }
 
         return newErrors;
@@ -86,6 +90,7 @@ const ResetPasswordForm = () => {
             
             if (result.success) {
                 setIsSuccess(true);
+                toast.success("Password berhasil direset.");
             } else {
                 setIsSuccess(false);
                 toast.error("Gagal mereset password. Mohon periksa kembali password Anda.");
@@ -99,26 +104,24 @@ const ResetPasswordForm = () => {
 
     if (isSuccess) {
         return (
-            <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
+            <div className="max-w-[400px] w-full mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
                 <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
                         <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900">Password Berhasil Direset</h1>
-                    <p className="text-gray-600 mt-2">
+                    <h1 className="text-3xl font-bold text-gray-900">Berhasil Direset</h1>
+                    <p className="text-gray-500 mt-2">
                         Password Anda telah berhasil direset. Silakan login dengan password baru Anda.
                     </p>
                     
-                    <div className="mt-6">
                         <Link
                             to="/login"
-                            className="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            className="button-primary cursor-pointer block mt-6"
                         >
                             Login Sekarang
                         </Link>
-                    </div>
                 </div>
             </div>
         );
@@ -128,7 +131,7 @@ const ResetPasswordForm = () => {
         <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
             <div className="text-center space-y-1">
                 <h1 className="text-3xl font-bold text-gray-900">Reset Password</h1>
-                <p className="text-gray-500">
+                <p className="text-gray-500 text-sm">
                     Masukkan password baru untuk akun <strong>{formData.email}</strong> Anda
                 </p>
             </div>
@@ -139,36 +142,38 @@ const ResetPasswordForm = () => {
                         <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                             Password Baru
                         </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className="input-field"
-                            placeholder="Masukkan password baru"
-                            disabled={isLoading}
-                            required
-                        />
-                        {errors.password && <p className="text-error mt-1">{errors.password}</p>}
+                        <div>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className={`input-field ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
+                                placeholder="Masukkan password baru disini"
+                                disabled={isLoading}
+                            />
+                            {errors.password && <p className="text-error mt-1">{errors.password}</p>}
+                        </div>
                     </div>
 
                     <div className="space-y-2">
                         <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-900">
                             Konfirmasi Password Baru
                         </label>
-                        <input
-                            type="password"
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            value={formData.password_confirmation}
-                            onChange={handleChange}
-                            className="input-field"
-                            placeholder="Konfirmasi password baru"
-                            disabled={isLoading}
-                            required
-                        />
-                        {errors.password_confirmation && <p className="text-error mt-1">{errors.password_confirmation}</p>}
+                        <div>
+                            <input
+                                type="password"
+                                id="password_confirmation"
+                                name="password_confirmation"
+                                value={formData.password_confirmation}
+                                onChange={handleChange}
+                                className={`input-field ${errors.password_confirmation ? 'border-red-500 focus:border-red-500' : ''}`}
+                                placeholder="Konfirmasi password baru disini"
+                                disabled={isLoading}
+                            />
+                            {errors.password_confirmation && <p className="text-error mt-1">{errors.password_confirmation}</p>}
+                        </div>
                     </div>
                 </div>
 

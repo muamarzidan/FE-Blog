@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 import { useAuth } from '../../context/Auth';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
@@ -8,34 +9,28 @@ import LoadingSpinner from '../moleculs/LoadingSpinner';
 const EmailVerificationForm = ({ user, onClose }) => {
     const { resendVerification } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
 
     const handleResendVerification = async () => {
         setIsLoading(true);
-        setError('');
-        setMessage('');
 
         try {
             const result = await resendVerification();
-            
             if (result.success) {
-                setMessage(result.message);
+                toast.success("Email verifikasi berhasil dikirim.");
             } else {
-                setError(result.error);
+                toast.error('Gagal mengirim email verifikasi, silakan coba lagi.');
             }
         } catch (error) {
-            setError('Terjadi kesalahan saat mengirim email verifikasi');
+            toast.error('Terjadi kesalahan saat mengirim email verifikasi, Mohon coba lagi nanti.');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const isEmailVerified = user?.email_verified_at !== null;
-
+    const isEmailVerified = user?.is_verified !== null && user?.is_verified === true;
     if (isEmailVerified) {
         return (
-            <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
+            <div className="max-w-[380px] w-full mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
                 <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
                         <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,32 +56,20 @@ const EmailVerificationForm = ({ user, onClose }) => {
         );
     };
 
+
     return (
-        <div className="max-w-[420px] mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
+        <div className="max-w-[380px] w-full mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
             <div className="text-center">
                 {/* <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
                     <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                     </svg>
                 </div> */}
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Verifikasi Email</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">Berhasil dikirim</h2>
                 <p className="text-gray-500 mb-4">
-                    Email verifikasi telah dikirim ke <strong>{user?.email}</strong>. 
-                    Silakan cek inbox atau folder spam Anda.
+                    Email verifikasi telah dikirim, {/* ke <strong>{user?.email}</strong>.  */} silakan cek inbox atau folder spam di email Anda.
                 </p>
             </div>
-
-            {message && (
-                <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                    {message}
-                </div>
-            )}
-
-            {error && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-                    {error}
-                </div>
-            )}
 
             <div className="space-y-3">
                 <div className="space-y-2">
