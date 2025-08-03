@@ -56,6 +56,7 @@ const EmailVerificationForm = ({ user, onClose }) => {
         );
     };
 
+
     return (
         <div className="max-w-[380px] w-full mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200 space-y-8">
             <div className="text-center">
@@ -69,7 +70,6 @@ const EmailVerificationForm = ({ user, onClose }) => {
                     Email verifikasi telah dikirim, {/* ke <strong>{user?.email}</strong>.  */} silakan cek inbox atau folder spam di email Anda.
                 </p>
             </div>
-
 
             <div className="space-y-3">
                 <div className="space-y-2">
