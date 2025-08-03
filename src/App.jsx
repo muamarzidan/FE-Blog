@@ -39,7 +39,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />}/>
-        <Route path="/home/blog/search" element={<Search />}/>
         <Route path="/auth/google/callback" element={<GoogleCallback />} />
         <Route 
           path="/login" 
