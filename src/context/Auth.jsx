@@ -67,7 +67,6 @@ export const AuthProvider = ({ children }) => {
                         dispatch({ type: 'LOGOUT' });
                     }
                 } catch (error) {
-                    console.error('Auth check failed:', error);
                     removeToken();
                     dispatch({ type: 'LOGOUT' });
                 }
@@ -112,7 +111,7 @@ export const AuthProvider = ({ children }) => {
             if (!error.response) {
                 return {
                     success: false,
-                    message: 'Tidak dapat terhubung ke server. Periksa koneksi internet atau coba lagi nanti.',
+                    message: 'Tidak dapat terhubung. Periksa koneksi internet atau coba lagi nanti.',
                     isNetworkError: true
                 };
             }
