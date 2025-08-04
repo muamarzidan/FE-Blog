@@ -41,13 +41,13 @@ function App() {
           duration: 4000,
         }}
       />
-      
+
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route path="/home" element={<Home />}/>
+        <Route path="/home" element={<Home />} />
         <Route path="/auth/google/callback" element={<GoogleCallback />} />
-        <Route 
-          path="/login" 
+        <Route
+          path="/login"
           element={
             isAuthenticated ? (
               user?.role === 'admin' ? (
@@ -58,10 +58,10 @@ function App() {
             ) : (
               <Login />
             )
-          } 
+          }
         />
-        <Route 
-          path="/register" 
+        <Route
+          path="/register"
           element={
             isAuthenticated ? (
               user?.role === 'admin' ? (
@@ -72,10 +72,10 @@ function App() {
             ) : (
               <Register />
             )
-          } 
+          }
         />
-        <Route 
-          path="/forgot-password" 
+        <Route
+          path="/forgot-password"
           element={
             isAuthenticated ? (
               user?.role === 'admin' ? (
@@ -86,10 +86,10 @@ function App() {
             ) : (
               <ForgotPassword />
             )
-          } 
+          }
         />
-        <Route 
-          path="/reset-password" 
+        <Route
+          path="/reset-password"
           element={
             isAuthenticated ? (
               user?.role === 'admin' ? (
@@ -100,15 +100,14 @@ function App() {
             ) : (
               <ResetPassword />
             )
-          } 
+          }
         />
-
         <Route
           path="/email/verification"
           element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <EmailVerification />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         />
         <Route
@@ -119,15 +118,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        
+
         {/* User Dashboard Routes */}
         <Route
           path="/dashboard/user"
@@ -153,20 +144,12 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* <Route
-          path="/dashboard/user/write"
-          element={
-            <ProtectedRoute>
-              <UserWrite />
-            </ProtectedRoute>
-          }
-        /> */}
         <Route
           path="/dashboard/user/edit-profile"
           element={
-            <ProtectedRoute>
-              <UserEditProfile />
-            </ProtectedRoute>
+            // <ProtectedRoute>
+            <UserEditProfile />
+            // </ProtectedRoute>
           }
         />
         <Route
@@ -177,28 +160,16 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
-        {/* Legacy routes for backward compatibility */}
+
+        {/* Admin Dashboard Routes */}
         <Route
-          path="/user-dashboard"
-          element={<Navigate to="/dashboard/user" replace />}
-        />
-        <Route
-          path="/dashboard/blogs"
+          path="/dashboard/admin/goblog/admin/goblog"
           element={
-            <ProtectedRoute>
-              <Blogs />
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
-        {/* <Route
-          path="/dashboard/write"
-          element={
-            <ProtectedRoute>
-              <Write />
-            </ProtectedRoute>
-          }
-        /> */}
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </>
