@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { useAuth } from '../context/Auth';
-import Layout from '../components/Layout';
+import Layout from '../components/common/Layout';
 
 
 export default function Home() {

@@ -109,6 +109,14 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             dispatch({ type: 'SET_LOADING', payload: false });
             
+            if (!error.response) {
+                return {
+                    success: false,
+                    message: 'Tidak dapat terhubung ke server. Periksa koneksi internet atau coba lagi nanti.',
+                    isNetworkError: true
+                };
+            }
+            
             if (error.response?.data) {
                 const errorData = error.response.data;
                 

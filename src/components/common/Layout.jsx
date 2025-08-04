@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import Navbar from './organism/Navbar';
-import Sidebar from './organism/Sidebar';
+import Navbar from './organisms/Navbar';
+import Sidebar from './organisms/Sidebar';
 
 
 const Layout = ({ children, searchQuery, filteredPosts }) => {

@@ -1,4 +1,4 @@
-import ResetPasswordForm from "../../components/organism/ResetPasswordForm"
+import ResetPasswordForm from "../../components/common/organisms/ResetPasswordForm"
 
 export default function ResetPassword() {
     return (

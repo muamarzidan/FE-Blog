@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/Auth';
-import LoadingSpinner from '../../components/moleculs/LoadingSpinner';
+import LoadingSpinner from '../../components/common/moleculs/LoadingSpinner';
 
 const GoogleCallback = () => {
     const navigate = useNavigate();

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
 
-import { useAuth } from '../../context/Auth';
+import { useAuth } from '../../../context/Auth';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
 
 

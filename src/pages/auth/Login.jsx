@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../context/Auth';
-import LoginForm from '../../components/organism/LoginForm';
+import LoginForm from '../../components/common/organisms/LoginForm';
 
 
 export default function Login() {

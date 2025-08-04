@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from "react-hot-toast";
 
-import { useAuth } from '../../context/Auth';
-import { useRateLimit } from '../../hooks/useRateLimit';
+import { useAuth } from '../../../context/Auth';
+import { useRateLimit } from '../../../hooks/useRateLimit';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
 
 
@@ -129,7 +129,7 @@ const ForgotPasswordForm = () => {
                             value={email}
                             onChange={handleChange}
                             className={`input-field ${emailError ? 'border-red-500' : ''}`}
-                            placeholder="Masukkan email Anda disini"
+                            placeholder="Masukkan email disini"
                             disabled={isLoading}
                         />
                         {emailError && (
@@ -152,11 +152,11 @@ const ForgotPasswordForm = () => {
                                 <span>Mengirim...</span>
                             </div>
                         ) : (
-                            'Kirim Link Reset Password'
+                            'Kirim'
                         )}
                     </button>
 
-                    <div className="text-center">
+                    <div className="text-center mt-4">
                         <p className="text-gray-500 text-sm">
                             Masih ingat password Anda?{' '}
                             <Link to="/login" className="text-link">

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 import { useAuth } from '../../context/Auth';
-import RegisterForm from '../../components/organism/RegisterForm';
+import RegisterForm from '../../components/common/organisms/RegisterForm';
 
 
 const Register = () => {

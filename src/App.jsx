@@ -12,11 +12,17 @@ import GoogleCallback from './pages/auth/GoogleCallback'
 // Main Pages
 import Home from './pages/Home'
 import BlogDetail from './pages/blog/BlogDetail'
-import Search from './pages/blog/Search'
-import AdminDashboard from './pages/dashboard/Home'
+import AdminDashboard from './pages/dashboard/admin/Home'
+// User Dashboard Pages
+import UserDashboardHome from './pages/dashboard/user/Home'
+import UserBlogs from './pages/dashboard/user/Blogs'
+import UserNotifications from './pages/dashboard/user/Notifications'
+import UserEditProfile from './pages/dashboard/user/EditProfile'
+import UserChangePassword from './pages/dashboard/user/ChangePassword'
+import Blogs from './pages/blog/Blogs'
 // Components
-import ProtectedRoute from './components/ProtectedRoute'
-import LoadingSpinner from './components/moleculs/LoadingSpinner'
+import ProtectedRoute from './components/common/ProtectedRoute'
+import LoadingSpinner from './components/common/moleculs/LoadingSpinner'
 
 
 function App() {
@@ -100,8 +106,8 @@ function App() {
         <Route
           path="/email/verification"
           element={
-              <EmailVerification />
             // <ProtectedRoute>
+              <EmailVerification />
             // </ProtectedRoute>
           }
         />
@@ -121,6 +127,78 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
+        {/* User Dashboard Routes */}
+        <Route
+          path="/dashboard/user"
+          element={
+            <ProtectedRoute>
+              <UserDashboardHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/user/blogs"
+          element={
+            <ProtectedRoute>
+              <UserBlogs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/user/notifications"
+          element={
+            <ProtectedRoute>
+              <UserNotifications />
+            </ProtectedRoute>
+          }
+        />
+        {/* <Route
+          path="/dashboard/user/write"
+          element={
+            <ProtectedRoute>
+              <UserWrite />
+            </ProtectedRoute>
+          }
+        /> */}
+        <Route
+          path="/dashboard/user/edit-profile"
+          element={
+            <ProtectedRoute>
+              <UserEditProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/user/change-password"
+          element={
+            <ProtectedRoute>
+              <UserChangePassword />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Legacy routes for backward compatibility */}
+        <Route
+          path="/user-dashboard"
+          element={<Navigate to="/dashboard/user" replace />}
+        />
+        <Route
+          path="/dashboard/blogs"
+          element={
+            <ProtectedRoute>
+              <Blogs />
+            </ProtectedRoute>
+          }
+        />
+        {/* <Route
+          path="/dashboard/write"
+          element={
+            <ProtectedRoute>
+              <Write />
+            </ProtectedRoute>
+          }
+        /> */}
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </>
