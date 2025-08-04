@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     }
 
     if (requiredRole && user?.role !== requiredRole) {
-        const redirectTo = user?.role === 'admin' ? '/dashboard' : '/home';
+        const redirectTo = user?.role === 'admin' ? '/dashboard/admin/goblog/admin/goblog' : '/home';
         return <Navigate to={redirectTo} replace />;
     }
 

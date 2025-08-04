@@ -24,7 +24,7 @@ const GoogleCallback = () => {
 
                 const result = await handleGoogleCallback(searchParams);
                 if (result.success) {
-                    const redirectPath = result.user.role === 'admin' ? '/dashboard' : '/home';
+                    const redirectPath = result.user.role === 'admin' ? '/dashboard/admin/goblog/admin/goblog' : '/home';
                     navigate(redirectPath, { replace: true });
                 } else {
                     navigate('/login', { 

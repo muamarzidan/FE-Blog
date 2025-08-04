@@ -17,7 +17,7 @@ export default function Login() {
             if (from && from !== '/login') {
                 navigate(from, { replace: true });
             } else {
-                const defaultPath = user.role === 'admin' ? '/dashboard' : '/home';
+                const defaultPath = user.role === 'admin' ? '/dashboard/admin/goblog/admin/goblog' : '/home';
                 navigate(defaultPath, { replace: true });
             }
         }
@@ -29,7 +29,7 @@ export default function Login() {
         if (from && from !== '/login') {
             navigate(from, { replace: true });
         } else {
-            const defaultPath = user.role === 'admin' ? '/dashboard' : '/home';
+            const defaultPath = user.role === 'admin' ? '/dashboard/admin/goblog/admin/goblog' : '/home';
             navigate(defaultPath, { replace: true });
         }
     };

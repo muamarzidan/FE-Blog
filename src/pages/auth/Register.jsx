@@ -12,13 +12,13 @@ const Register = () => {
 
     useEffect(() => {
         if (isAuthenticated && user) {
-            const redirectTo = user.role === 'admin' ? '/dashboard' : '/home';
+            const redirectTo = user.role === 'admin' ? '/dashboard/admin/goblog/admin/goblog' : '/home';
             navigate(redirectTo, { replace: true });
         }
     }, [isAuthenticated, user, navigate]);
 
     const handleRegisterSuccess = (user) => {
-        const redirectTo = user.role === 'admin' ? '/dashboard' : '/home';
+        const redirectTo = user.role === 'admin' ? '/dashboard/admin/goblog/admin/goblog' : '/home';
         navigate(redirectTo, { replace: true });
         toast.success('Pendaftaran akun berhasil!');
     };
