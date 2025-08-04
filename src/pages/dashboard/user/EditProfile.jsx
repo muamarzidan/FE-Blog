@@ -45,7 +45,7 @@ const EditProfile = () => {
                                 <button
                                     title="Ganti foto profil"
                                     type="button"
-                                    className="button-primary rounded-lg px-4 py-2 font-bold bg-blue-200 text-blue-900 hover:bg-blue-300 transition-colors cursor-pointer"
+                                    className="button-primary rounded-lg px-4 py-2 font-bold bg-blue-100 text-blue-900 hover:bg-blue-200 transition-colors cursor-pointer"
                                 >
                                     Ganti
                                 </button>

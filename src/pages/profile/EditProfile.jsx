@@ -43,7 +43,6 @@ const EditProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
     // Handle form submission logic here
   };
 
@@ -72,7 +71,7 @@ const EditProfile = () => {
               <div>
                 <button
                   type="button"
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+                  className="bg-blue-200 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium"
                 >
                   Upload
                 </button>
@@ -86,7 +85,6 @@ const EditProfile = () => {
           {/* Basic Information */}
           <div className="bg-white rounded-lg shadow p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Full Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <span className="text-gray-600">👤</span> Full Name
@@ -99,8 +97,6 @@ const EditProfile = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-
-              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <span className="text-gray-600">✉️</span> Email
@@ -113,8 +109,6 @@ const EditProfile = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-
-              {/* Username */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <span className="text-gray-600">@</span> Username
