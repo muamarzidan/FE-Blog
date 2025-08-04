@@ -41,7 +41,6 @@ const Sidebar = ({ isOpen, onClose, searchQuery, filteredPosts }) => {
             const filteredTrendingTopics = allTrendingBlogs.filter(topic =>
                 topic.title.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            console.log('Filtered Trending Topics:', filteredTrendingTopics);
             setFilteredTrending(filteredTrendingTopics);
 
             // Filter top users

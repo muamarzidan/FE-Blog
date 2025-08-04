@@ -62,7 +62,7 @@ const LoginForm = ({ onSuccess }) => {
             rateLimit.addAttempt();
             
             if (result?.isNetworkError) {
-                toast.error(result.message || 'Tidak dapat terhubung ke server');
+                toast.error(result.message);
             } else if (result?.errors) {
                 if (typeof result.errors === 'object') {
                     const errorMessages = Object.values(result.errors).flat();

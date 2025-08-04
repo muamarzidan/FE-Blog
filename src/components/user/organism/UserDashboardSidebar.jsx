@@ -9,11 +9,12 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline';
 
+
 const UserDashboardSidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: HomeIcon, href: '/dashboard/user' },
+    { id: 'home', label: 'Home', icon: HomeIcon, href: '/dashboard/user' },
     { id: 'blogs', label: 'Blogs', icon: BookOpenIcon, href: '/dashboard/user/blogs' },
     { id: 'notifications', label: 'Notifications', icon: BellIcon, href: '/dashboard/user/notifications' },
     { id: 'write', label: 'Write', icon: PencilIcon, href: '/dashboard/user/write' },
@@ -64,10 +65,10 @@ const UserDashboardSidebar = ({ isOpen, onClose }) => {
                     key={item.id}
                     to={item.href}
                     onClick={() => window.innerWidth < 768 && onClose()}
-                    className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-color ${
                       isActive(item.href)
-                        ? 'bg-gray-100 text-gray-900'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'text-white bg-gray-900'
+                        : ' text-gray-800 hover:bg-gray-200'
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -89,10 +90,10 @@ const UserDashboardSidebar = ({ isOpen, onClose }) => {
                     key={item.id}
                     to={item.href}
                     onClick={() => window.innerWidth < 768 && onClose()}
-                    className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-color ${
                       isActive(item.href)
-                        ? 'bg-gray-100 text-gray-900'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'text-white bg-gray-900'
+                        : ' text-gray-800 hover:bg-gray-200'
                     }`}
                   >
                     <Icon className="h-5 w-5" />
