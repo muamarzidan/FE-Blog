@@ -1,4 +1,4 @@
-import { useAuth } from '../../context/Auth';
+import { useAuth } from '../../../context/Auth';
 
 const GoogleLoginButton = ({ onSuccess, disabled = false }) => {
     const { googleLogin, isLoading } = useAuth();

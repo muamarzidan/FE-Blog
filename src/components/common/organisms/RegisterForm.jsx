@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from "react-hot-toast";
 
-import { useAuth } from '../../context/Auth';
-import { useRateLimit } from '../../hooks/useRateLimit';
+import { useAuth } from '../../../context/Auth';
+import { useRateLimit } from '../../../hooks/useRateLimit';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
 
 
@@ -18,7 +18,6 @@ const RegisterForm = ({ onSuccess }) => {
         password_confirmation: '',
     });
     const [errors, setErrors] = useState({});
-
 
 
     const handleChange = (e) => {
@@ -115,8 +114,8 @@ const RegisterForm = ({ onSuccess }) => {
                 )}
 
                 <div className="space-y-2">
-                    <div className="space-y-2">
-                        <label htmlFor="fullname" className="block text-sm font-medium text-gray-900 mb-2">
+                    <div>
+                        <label htmlFor="fullname" className="block text-sm font-medium text-gray-900 mb-1">
                             Nama Lengkap
                         </label>
                         <div>
@@ -134,8 +133,8 @@ const RegisterForm = ({ onSuccess }) => {
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-900 mb-2">
+                    <div>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-900 mb-1">
                             Nama Panggilan
                         </label>
                         <div>
@@ -153,8 +152,8 @@ const RegisterForm = ({ onSuccess }) => {
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-1">
                             Email
                         </label>
                         <div>
@@ -172,8 +171,8 @@ const RegisterForm = ({ onSuccess }) => {
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
+                    <div>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-1">
                             Password
                         </label>
                         <div>
@@ -191,8 +190,8 @@ const RegisterForm = ({ onSuccess }) => {
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-900 mb-2">
+                    <div>
+                        <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-900 mb-1">
                             Konfirmasi Password
                         </label>
                         <div>

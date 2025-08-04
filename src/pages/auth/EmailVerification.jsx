@@ -1,5 +1,5 @@
 import { useAuth } from '../../context/Auth';
-import EmailVerificationForm from '../../components/organism/EmailVerificationForm';
+import EmailVerificationForm from '../../components/common/organisms/EmailVerificationForm';
 
 export default function EmailVerificationPage() {
     const { user } = useAuth();

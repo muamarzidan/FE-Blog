@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from "react-hot-toast";
 
-import { useAuth } from '../../context/Auth';
-import { useRateLimit } from '../../hooks/useRateLimit';
+import { useAuth } from '../../../context/Auth';
+import { useRateLimit } from '../../../hooks/useRateLimit';
 import GoogleLoginButton from '../moleculs/GoogleLoginButton';
 import LoadingSpinner from '../moleculs/LoadingSpinner';
 
@@ -15,7 +15,6 @@ const LoginForm = ({ onSuccess }) => {
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-
 
     
     const handleEmailChange = (e) => {
@@ -29,44 +28,57 @@ const LoginForm = ({ onSuccess }) => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
+    
+    setEmailError('');
+    setPasswordError('');
+
+    let hasErrors = false;
+    if (!email) {
+        setEmailError('Email wajib diisi');
+        hasErrors = true;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+        setEmailError('Format email tidak valid');
+        hasErrors = true;
+    }
+
+    if (!password) {
+        setPasswordError('Password wajib diisi');
+        hasErrors = true;
+    }
+
+    if (hasErrors) {
+        return;
+    }
+
+    try {
+        const result = await login({ email, password });
         
-        setEmailError('');
-        setPasswordError('');
-
-        let hasErrors = false;
-        if (!email) {
-            setEmailError('Email wajib diisi');
-            hasErrors = true;
-        } else if (!/\S+@\S+\.\S+/.test(email)) {
-            setEmailError('Format email tidak valid');
-            hasErrors = true;
-        }
-
-        if (!password) {
-            setPasswordError('Password wajib diisi');
-            hasErrors = true;
-        }
-
-        if (hasErrors) {
-            return;
-        }
-
-        try {
-            const result = await login({ email, password });
-            if (result?.success) {
-                rateLimit.reset();
-                onSuccess?.(result.user);
-            } else {
-                rateLimit.addAttempt();
-                toast.error("Login gagal. Mohon periksa kembali email atau password Anda.");
-            }
-        } catch (error) {
+        if (result?.success) {
+            rateLimit.reset();
+            onSuccess?.(result.user);
+            toast.success('Login berhasil');
+        } else {
             rateLimit.addAttempt();
-            toast.error('Terjadi kesalahan saat login. Silakan coba lagi.');
+            
+            if (result?.isNetworkError) {
+                toast.error(result.message || 'Tidak dapat terhubung ke server');
+            } else if (result?.errors) {
+                if (typeof result.errors === 'object') {
+                    const errorMessages = Object.values(result.errors).flat();
+                    toast.error(errorMessages[0] || result.message);
+                } else {
+                    toast.error(result.errors);
+                }
+            } else {
+                toast.error(result?.message || 'Login gagal');
+            }
         }
-    };
-
+    } catch (error) {
+        rateLimit.addAttempt();
+        toast.error('Terjadi kesalahan saat login. Silakan coba lagi.');
+    }
+};
 
     return (
         <div className="max-w-[380px] w-full mx-auto rounded-2xl bg-white py-8 px-12 shadow-xl shadow-gray-200">
@@ -83,7 +95,7 @@ const LoginForm = ({ onSuccess }) => {
                 )}
 
                 <div className="space-y-3">
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                         <label htmlFor="email" className="block text-sm font-medium text-gray-900">
                             Email
                         </label>
@@ -95,14 +107,14 @@ const LoginForm = ({ onSuccess }) => {
                                 value={email}
                                 onChange={handleEmailChange}
                                 className={`input-field ${emailError ? 'border-red-500 focus:border-red-500' : ''}`}
-                                placeholder="Masukkan email Anda"
+                                placeholder="Masukkan email disini"
                                 disabled={isLoading}
                             />
                             {emailError && <p className="text-error">{emailError}</p>}
                         </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-900">
                             Password
                         </label>
@@ -113,7 +125,7 @@ const LoginForm = ({ onSuccess }) => {
                                 value={password}
                                 onChange={handlePasswordChange}
                                 className={`input-field ${passwordError ? 'border-red-500 focus:border-red-500' : ''}`}
-                                placeholder="Masukkan password Anda"
+                                placeholder="Masukkan password disini"
                                 disabled={isLoading}
                             />
                             {passwordError && <p className="text-error">{passwordError}</p>}
